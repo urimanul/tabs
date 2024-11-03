@@ -1,4 +1,5 @@
 import streamlit as st
+import requests
 
 # Streamlitアプリの設定
 st.title('RAG')
