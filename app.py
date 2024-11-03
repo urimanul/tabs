@@ -65,7 +65,7 @@ with tabs[1]:
     }
 
     # ボタンが押されたときの処理
-    if st.button("送信"):
+    if st.button("生成"):
         # POSTデータを設定
         my_content = f"{rag_chain} 必ず、日本語で答えてください。"
         data = {
@@ -76,10 +76,15 @@ with tabs[1]:
 
         # APIリクエストを送信
         response = requests.post(url, json=data, headers=headers)
-        cohere_resp = response.json().get('text', 'No response')
+        cohere_resp = str(response)
+        #cohere_resp = response.json().get('text', 'No response')
 
-        # 結果を表示
-        st.write(cohere_resp)
+        # 結果をsession_stateに保存
+        st.session_state['cohere_resp'] = cohere_resp
+
+    if 'cohere_resp' in st.session_state:
+        st.subheader('結果')
+        st.text_area('Result', st.session_state['cohere_resp'], height=300)
 
 # タブ3の内容
 with tabs[2]:
