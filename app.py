@@ -67,7 +67,7 @@ with tabs[1]:
     # ボタンが押されたときの処理
     if st.button("送信"):
         # POSTデータを設定
-        my_content = f"{input_value} 必ず、日本語で答えてください。"
+        my_content = f"{rag_chain} 必ず、日本語で答えてください。"
         data = {
             "model": "command-r-plus",
             "message": rag_chain,
