@@ -22,8 +22,8 @@ with tabs[0]:
         'Authorization': f'Bearer {API_KEY}'
     }
 
-    # 分析ボタンの作成
-    if st.button('分析'):
+    # 生成ボタンの作成
+    if st.button('生成'):
         data = {
             'model': MODEL,
             'max_tokens': maxTokens,
@@ -52,8 +52,34 @@ with tabs[0]:
 
 # タブ2の内容
 with tabs[1]:
-    st.header("タブ2の内容")
-    st.write("ここにタブ2の内容を記述します。")
+    st.header("RAG")
+    # ユーザー入力を取得
+rag_chain = st.text_area("プロンプトを入力してください")
+
+# APIキーとURLの設定
+apikey = 'GqsxZlKmcBzSultkVOfKPf7kVhYkporXvivq9KHg'
+url = 'https://api.cohere.com/v1/chat'
+headers = {
+    'Authorization': f'Bearer {apikey}',
+    'Content-Type': 'application/json'
+}
+
+# ボタンが押されたときの処理
+if st.button("送信"):
+    # POSTデータを設定
+    my_content = f"{input_value} 必ず、日本語で答えてください。"
+    data = {
+        "model": "command-r-plus",
+        "message": rag_chain,
+        "connectors": [{"id": "authryh-wfc54k"}, {"id": "o365schedule-e4baaa"}, {"id": "mental-health-r7n71k"}, {"id": "web-search"}]
+    }
+
+    # APIリクエストを送信
+    response = requests.post(url, json=data, headers=headers)
+    cohere_resp = response.json().get('text', 'No response')
+
+    # 結果を表示
+    st.write(cohere_resp)
 
 # タブ3の内容
 with tabs[2]:
