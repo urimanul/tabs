@@ -76,7 +76,7 @@ with tabs[1]:
 
         # APIリクエストを送信
         response = requests.post(url, json=data, headers=headers)
-        cohere_resp = str(response)
+        cohere_resp = response.json()[data][text]
         #cohere_resp = response.json().get('text', 'No response')
 
         # 結果をsession_stateに保存
