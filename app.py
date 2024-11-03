@@ -1,5 +1,18 @@
 import streamlit as st
 import requests
+from PyPDF2 import PdfReader
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.lex_rank import LexRankSummarizer
+from io import BytesIO
+
+def read_pdf(file):
+    pdf_reader = PdfReader(file)
+    text = ""
+    for page_num in range(len(pdf_reader.pages)):
+        page = pdf_reader.pages[page_num]
+        text += page.extract_text()
+    return text
 
 # Streamlitアプリの設定
 st.title('RAG')
@@ -89,5 +102,30 @@ with tabs[1]:
 
 # タブ3の内容
 with tabs[2]:
-    st.header("タブ3の内容")
-    st.write("ここにタブ3の内容を記述します。")
+    st.header("PARSE")
+    uploaded_file = st.file_uploader("PDFファイルを選択してください", type=["pdf"])
+
+    if uploaded_file is not None:
+        text = read_pdf(uploaded_file)
+    
+        # 読み込んだPDFファイルの文字数を表示
+        st.write(f"読み込んだPDFファイルの文字数: {len(text)}文字")
+    
+        # 要約文字数を指定
+        char_count = st.number_input("要約文字数を指定してください", min_value=1, max_value=100000, value=2000)
+    
+        # 要約を実行
+        parser = PlaintextParser.from_string(text, Tokenizer('japanese'))
+        summarizer = LexRankSummarizer()
+        res = summarizer(document=parser.document, sentences_count=char_count)  # 大きな値を設定しておく
+
+        # 指定された文字数に要約を調整
+        summary = ""
+        for sentence in res:
+            if len(summary) + len(str(sentence)) <= char_count:
+                summary += str(sentence)
+            else:
+                break
+
+        # フォントサイズを12pxに設定して表示
+        st.markdown(f"<div style='font-size: 12px;'>{summary}</div>", unsafe_allow_html=True)
