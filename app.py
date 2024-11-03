@@ -54,29 +54,29 @@ with tabs[0]:
 with tabs[1]:
     st.header("RAG")
     # ユーザー入力を取得
-rag_chain = st.text_area("プロンプトを入力してください")
+    rag_chain = st.text_area("プロンプトを入力してください")
 
-# APIキーとURLの設定
-apikey = 'GqsxZlKmcBzSultkVOfKPf7kVhYkporXvivq9KHg'
-url = 'https://api.cohere.com/v1/chat'
-headers = {
-    'Authorization': f'Bearer {apikey}',
-    'Content-Type': 'application/json'
-}
-
-# ボタンが押されたときの処理
-if st.button("送信"):
-    # POSTデータを設定
-    my_content = f"{input_value} 必ず、日本語で答えてください。"
-    data = {
-        "model": "command-r-plus",
-        "message": rag_chain,
-        "connectors": [{"id": "authryh-wfc54k"}, {"id": "o365schedule-e4baaa"}, {"id": "mental-health-r7n71k"}, {"id": "web-search"}]
+    # APIキーとURLの設定
+    apikey = 'GqsxZlKmcBzSultkVOfKPf7kVhYkporXvivq9KHg'
+    url = 'https://api.cohere.com/v1/chat'
+    headers = {
+        'Authorization': f'Bearer {apikey}',
+        'Content-Type': 'application/json'
     }
 
-    # APIリクエストを送信
-    response = requests.post(url, json=data, headers=headers)
-    cohere_resp = response.json().get('text', 'No response')
+    # ボタンが押されたときの処理
+    if st.button("送信"):
+        # POSTデータを設定
+        my_content = f"{input_value} 必ず、日本語で答えてください。"
+        data = {
+            "model": "command-r-plus",
+            "message": rag_chain,
+            "connectors": [{"id": "authryh-wfc54k"}, {"id": "o365schedule-e4baaa"}, {"id": "mental-health-r7n71k"}, {"id": "web-search"}]
+        }
+
+        # APIリクエストを送信
+        response = requests.post(url, json=data, headers=headers)
+        cohere_resp = response.json().get('text', 'No response')
 
     # 結果を表示
     st.write(cohere_resp)
