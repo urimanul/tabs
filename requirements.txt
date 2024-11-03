@@ -1,2 +1,7 @@
 streamlit
 requests
+sumy
+tinysegmenter
+ginza
+ja-ginza
+PyPDF2
