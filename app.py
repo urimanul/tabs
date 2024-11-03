@@ -78,8 +78,8 @@ with tabs[1]:
         response = requests.post(url, json=data, headers=headers)
         cohere_resp = response.json().get('text', 'No response')
 
-    # 結果を表示
-    st.write(cohere_resp)
+        # 結果を表示
+        st.write(cohere_resp)
 
 # タブ3の内容
 with tabs[2]:
